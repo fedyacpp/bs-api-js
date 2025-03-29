@@ -12,9 +12,9 @@ A fully typed JavaScript/TypeScript client for the official [Brawl Stars API](ht
 ## Installation
 
 ```bash
-npm install bs-api-js
+npm install @fedyacpp/bs-api-js
 # or
-yarn add bs-api-js
+yarn add @fedyacpp/bs-api-js
 ```
 
 ## Configuration
@@ -42,7 +42,7 @@ You can also pass the key directly to the constructor, but who really does this?
 ## Usage
 
 ```typescript
-import { BrawlStarsClient, BrawlStarsApiError, Player } from 'bs-api-js';
+import { BrawlStarsClient, BrawlStarsApiError, Player } from '@fedyacpp/bs-api-js';
 
 // Retrieve the API key from environment variables
 const apiKey = process.env.BRAWL_STARS_API_KEY;
@@ -126,7 +126,7 @@ API errors are thrown as `BrawlStarsApiError` instances, extending the built-in 
 *   `errorData`: The original JSON error object returned by the API (if available), containing `reason`, `message`, `type`, etc.
 
 ```typescript
-import { BrawlStarsApiError } from 'bs-api-js';
+import { BrawlStarsApiError } from '@fedyacpp/bs-api-js';
 
 try {
   const data = await client.getPlayer('#INVALID-TAG');
