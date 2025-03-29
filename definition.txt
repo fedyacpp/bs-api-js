@@ -1,0 +1,384 @@
+# Brawl Stars API Documentation
+
+This document provides comprehensive information about the Brawl Stars API endpoints, including URL paths, request parameters, and response schemas.
+
+## API Base Information
+- **Host**: api.brawlstars.com
+- **Base Path**: /v1
+- **Supported Protocols**: HTTPS, HTTP
+- **Consumes**: application/json
+- **Produces**: application/json
+- **Authentication**: JWT (JSON Web Token as an API key in the Authorization header)
+
+## Endpoints
+
+### Players
+
+#### Get Player Information
+Retrieves information about a single player by their tag.
+
+- **URL**: `/players/{playerTag}`
+- **Method**: GET
+- **Tags**: players
+- **Operation ID**: getPlayer
+
+**Parameters**:
+- `playerTag` (path, required): Tag of the player
+
+**Responses**:
+- `200`: Successful response
+  - Schema: Player object
+- `400`: Bad Request - Client provided incorrect parameters
+- `403`: Forbidden - Missing/incorrect credentials or insufficient permissions
+- `404`: Not Found - Resource was not found
+- `429`: Too Many Requests - Request was throttled due to rate limits
+- `500`: Internal Server Error - Unknown exception
+- `503`: Service Unavailable - Maintenance in progress
+
+#### Get Player Battle Log
+Retrieves a log of recent battles for a player.
+
+- **URL**: `/players/{playerTag}/battlelog`
+- **Method**: GET
+- **Tags**: players
+- **Operation ID**: getBattleLog
+- **Note**: It may take up to 30 minutes for a new battle to appear in the battlelog.
+
+**Parameters**:
+- `playerTag` (path, required): Tag of the player
+
+**Responses**:
+- `200`: Successful response
+  - Schema: BattleList object
+- `400`, `403`, `404`, `429`, `500`, `503`: Same as above
+
+### Clubs
+
+#### Get Club Information
+Retrieves information about a single club by its tag.
+
+- **URL**: `/clubs/{clubTag}`
+- **Method**: GET
+- **Tags**: clubs
+- **Operation ID**: getClub
+- **Note**: Club tags start with a hash character '#' that needs to be URL-encoded properly (e.g., '#2ABC' becomes '%232ABC')
+
+**Parameters**:
+- `clubTag` (path, required): Tag of the club
+
+**Responses**:
+- `200`: Successful response
+  - Schema: Club object
+- `400`, `403`, `404`, `429`, `500`, `503`: Same as above
+
+#### Get Club Members
+Lists members of a specific club.
+
+- **URL**: `/clubs/{clubTag}/members`
+- **Method**: GET
+- **Tags**: clubs
+- **Operation ID**: getClubMembers
+
+**Parameters**:
+- `clubTag` (path, required): Tag of the club
+- `before` (query, optional): Return only items that occur before this marker
+- `after` (query, optional): Return only items that occur after this marker
+- `limit` (query, optional): Limit the number of items returned
+
+**Responses**:
+- `200`: Successful response
+  - Schema: ClubMemberList object
+- `400`, `403`, `404`, `429`, `500`, `503`: Same as above
+
+### Brawlers
+
+#### Get All Brawlers
+Retrieves a list of all available brawlers.
+
+- **URL**: `/brawlers`
+- **Method**: GET
+- **Tags**: brawlers
+- **Operation ID**: getBrawlers
+
+**Parameters**:
+- `before` (query, optional): Return only items that occur before this marker
+- `after` (query, optional): Return only items that occur after this marker
+- `limit` (query, optional): Limit the number of items returned
+
+**Responses**:
+- `200`: Successful response
+  - Schema: BrawlerList object
+- `400`, `403`, `404`, `429`, `500`, `503`: Same as above
+
+#### Get Brawler Information
+Retrieves information about a specific brawler.
+
+- **URL**: `/brawlers/{brawlerId}`
+- **Method**: GET
+- **Tags**: brawlers
+- **Operation ID**: getBrawler
+
+**Parameters**:
+- `brawlerId` (path, required): Identifier of the brawler
+
+**Responses**:
+- `200`: Successful response
+  - Schema: Brawler object
+- `400`, `403`, `404`, `429`, `500`, `503`: Same as above
+
+### Rankings
+
+#### Get Player Rankings
+Retrieves player rankings for a country or global rankings.
+
+- **URL**: `/rankings/{countryCode}/players`
+- **Method**: GET
+- **Tags**: rankings
+- **Operation ID**: getPlayerRankings
+
+**Parameters**:
+- `countryCode` (path, required): Two-letter country code, or 'global' for global rankings
+- `before` (query, optional): Return only items that occur before this marker
+- `after` (query, optional): Return only items that occur after this marker
+- `limit` (query, optional): Limit the number of items returned
+
+**Responses**:
+- `200`: Successful response
+  - Schema: PlayerRankingList object
+- `400`, `403`, `404`, `429`, `500`, `503`: Same as above
+
+#### Get Club Rankings
+Retrieves club rankings for a country or global rankings.
+
+- **URL**: `/rankings/{countryCode}/clubs`
+- **Method**: GET
+- **Tags**: rankings
+- **Operation ID**: getClubRankings
+
+**Parameters**:
+- `countryCode` (path, required): Two-letter country code, or 'global' for global rankings
+- `before` (query, optional): Return only items that occur before this marker
+- `after` (query, optional): Return only items that occur after this marker
+- `limit` (query, optional): Limit the number of items returned
+
+**Responses**:
+- `200`: Successful response
+  - Schema: ClubRankingList object
+- `400`, `403`, `404`, `429`, `500`, `503`: Same as above
+
+#### Get Brawler Rankings
+Retrieves brawler rankings for a country or global rankings.
+
+- **URL**: `/rankings/{countryCode}/brawlers/{brawlerId}`
+- **Method**: GET
+- **Tags**: rankings
+- **Operation ID**: getBrawlerRankings
+
+**Parameters**:
+- `countryCode` (path, required): Two-letter country code, or 'global' for global rankings
+- `brawlerId` (path, required): Identifier of the brawler
+- `before` (query, optional): Return only items that occur before this marker
+- `after` (query, optional): Return only items that occur after this marker
+- `limit` (query, optional): Limit the number of items returned
+
+**Responses**:
+- `200`: Successful response
+  - Schema: PlayerRankingList object
+- `400`, `403`, `404`, `429`, `500`, `503`: Same as above
+
+### Events
+
+#### Get Event Rotation
+Retrieves the event rotation for ongoing events.
+
+- **URL**: `/events/rotation`
+- **Method**: GET
+- **Tags**: events
+- **Operation ID**: getScheduledEvents
+
+**Responses**:
+- `200`: Successful response
+  - Schema: ScheduledEvents object
+- `400`, `403`, `404`, `429`, `500`, `503`: Same as above
+
+## Data Models
+
+### Player
+```json
+{
+  "club": {
+    "tag": "string",
+    "name": "string"
+  },
+  "3vs3Victories": "integer",
+  "isQualifiedFromChampionshipChallenge": "boolean",
+  "icon": {
+    "id": "integer"
+  },
+  "tag": "string",
+  "name": "string",
+  "trophies": "integer",
+  "expLevel": "integer",
+  "expPoints": "integer",
+  "highestTrophies": "integer",
+  "soloVictories": "integer",
+  "duoVictories": "integer",
+  "bestRoboRumbleTime": "integer",
+  "bestTimeAsBigBrawler": "integer",
+  "brawlers": [
+    {
+      "gadgets": [
+        {
+          "name": {},
+          "id": "integer"
+        }
+      ],
+      "starPowers": [
+        {
+          "name": {},
+          "id": "integer"
+        }
+      ],
+      "id": "integer",
+      "rank": "integer",
+      "trophies": "integer",
+      "highestTrophies": "integer",
+      "power": "integer",
+      "gears": [
+        {
+          "name": {},
+          "id": "integer",
+          "level": "integer"
+        }
+      ],
+      "name": {}
+    }
+  ],
+  "nameColor": "string"
+}
+```
+
+### Club
+```json
+{
+  "tag": "string",
+  "name": "string",
+  "description": "string",
+  "trophies": "integer",
+  "requiredTrophies": "integer",
+  "members": [
+    {
+      "icon": {
+        "id": "integer"
+      },
+      "tag": "string",
+      "name": "string",
+      "trophies": "integer",
+      "role": "notMember|member|president|senior|vicePresident|unknown",
+      "nameColor": "string"
+    }
+  ],
+  "type": "open|inviteOnly|closed|unknown",
+  "badgeId": "integer"
+}
+```
+
+### Brawler
+```json
+{
+  "gadgets": [
+    {
+      "name": {},
+      "id": "integer"
+    }
+  ],
+  "name": {},
+  "id": "integer",
+  "starPowers": [
+    {
+      "name": {},
+      "id": "integer"
+    }
+  ]
+}
+```
+
+### Battle
+```json
+{
+  "battleTime": "string",
+  "event": {
+    "mode": "enum(multiple game modes)",
+    "id": "integer",
+    "map": {}
+  },
+  "battle": {}
+}
+```
+
+### PlayerRanking
+```json
+{
+  "club": {
+    "name": "string"
+  },
+  "trophies": "integer",
+  "icon": {
+    "id": "integer"
+  },
+  "tag": "string",
+  "name": "string",
+  "rank": "integer",
+  "nameColor": "string"
+}
+```
+
+### ClubRanking
+```json
+{
+  "tag": "string",
+  "name": "string",
+  "trophies": "integer",
+  "rank": "integer",
+  "memberCount": "integer",
+  "badgeId": "integer"
+}
+```
+
+### ScheduledEvent
+```json
+{
+  "event": {
+    "mode": "enum(multiple game modes)",
+    "modifiers": [
+      "enum(event modifiers)"
+    ],
+    "id": "integer",
+    "map": {}
+  },
+  "slotId": "integer",
+  "startTime": "string",
+  "endTime": "string"
+}
+```
+
+## Error Responses
+
+### ClientError
+```json
+{
+  "reason": "string",
+  "message": "string",
+  "type": "string",
+  "detail": "object"
+}
+```
+
+## Common HTTP Status Codes
+- `200`: Success
+- `400`: Bad Request
+- `403`: Forbidden
+- `404`: Not Found
+- `429`: Too Many Requests
+- `500`: Internal Server Error
+- `503`: Service Unavailable (Maintenance)
